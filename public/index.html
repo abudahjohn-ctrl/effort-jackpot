@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PCEA Chemichemi – Effort Jackpot</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#14307a;--red:#c8102e;--gold:#ffd23f;--bg:#eaf2fc;--ink:#14307a}
+*{box-sizing:border-box}
+body{margin:0;background:#dfe6f0;font-family:Oswald,Arial,sans-serif;color:var(--ink);display:flex;justify-content:center}
+.poster{width:100%;max-width:440px;background:var(--bg);padding:16px;min-height:100vh}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:22px;font-weight:700}
+.daybox{border:2px solid var(--gold);background:#fff;border-radius:8px;padding:4px 12px;text-align:center;font-size:12px;color:var(--red)}
+.daybox b{display:block;font-size:22px;color:var(--navy)}
+.hero{margin:14px 0 8px;border-radius:12px;padding:14px;text-align:center;background:linear-gradient(90deg,var(--red),var(--navy));border-bottom:4px solid var(--navy)}
+.hero .a{color:var(--gold);font-size:52px;font-weight:700;line-height:1}.hero .b{color:#fff;font-size:48px;font-weight:700;line-height:1}
+.goal{text-align:center;font-size:26px;font-weight:700;margin:6px 0 0}.goal i{color:var(--red);font-family:'Playfair Display',serif}
+.tag{text-align:center;font-family:'Playfair Display',serif;font-style:italic;margin:4px 0 12px}
+.red{background:var(--red);color:#fff;border-radius:8px;text-align:center;padding:8px;font-size:13px}.red b{display:block;color:var(--gold);font-size:22px}
+.guest{background:var(--navy);color:#fff;border-radius:8px;text-align:center;padding:12px;margin:10px 0;border:1px solid var(--gold)}
+.guest span{background:var(--gold);color:var(--navy);font-size:11px;padding:3px 12px;border-radius:99px;font-weight:700}.guest div{font-size:22px;margin-top:8px}
+.card{background:#fff;border:2px solid var(--navy);border-radius:12px;padding:12px;text-align:center}
+.card small{font-size:11px}
+.bar{height:20px;border:1px solid var(--navy);border-radius:10px;background:#e9eef7;overflow:hidden;margin:8px 0}
+.fill{height:100%;width:0;background:linear-gradient(90deg,#2e9e4f,var(--gold),var(--red));transition:width 1.2s ease}
+.amt{font-size:34px;font-weight:700}.pct{display:inline-block;background:var(--gold);padding:2px 22px;border-radius:99px;font-weight:700}
+.flash{animation:f .9s}@keyframes f{40%{color:var(--red);transform:scale(1.08)}}
+.recent{margin:10px 0 0;padding:0;list-style:none;font-size:13px;text-align:left}
+.recent li{display:flex;justify-content:space-between;border-top:1px dashed #b9c6df;padding:4px 0}
+.keep{background:var(--navy);color:#fff;border-radius:6px;text-align:center;font-size:12px;padding:8px;margin:12px 0;font-weight:700}.keep b{color:var(--gold)}
+.foot{display:flex;justify-content:space-around;text-align:center;font-size:12px}.foot b{display:block;color:var(--red);font-size:20px}
+.glory{background:var(--red);color:#fff;text-align:center;border-radius:6px;padding:8px;margin-top:12px;font-size:13px;font-weight:700}
+@media(prefers-reduced-motion:reduce){.fill{transition:none}.flash{animation:none}}
+</style></head><body><main class="poster">
+<div class="top"><span>PCEA CHEMICHEMI</span><div class="daybox">DAY<b id="day">1/15</b></div></div>
+<div class="hero"><div class="a">EFFORT</div><div class="b">JACKPOT</div></div>
+<div class="goal">150,000/- <i>in</i> 15 DAYS</div><div class="tag">One Meal, One Mission</div>
+<div class="red"><span id="dl">DAY 1/15 • TIME LEFT TODAY</span><b id="left">--</b></div>
+<div class="guest" id="g"><span>OUR GUEST TODAY</span><div id="guest"></div></div>
+<div class="card"><small>CURRENT PROGRESS as of <b id="asof">--</b> Hours</small>
+<div class="bar"><div class="fill" id="fill"></div></div>
+<div class="amt" id="amt">0 / 150,000</div><div class="pct" id="pct">0%</div>
+<ul class="recent" id="recent"></ul></div>
+<div class="keep">KEEP GOING – EVERY EFFORT COUNTS! <b>GOD WILL DO IT!</b></div>
+<div class="foot"><div>CONTACT<b>0722 269 233</b></div><div>TODAY<b id="date" style="color:var(--navy);font-size:15px"></b></div></div>
+<div class="glory">GLORY TO GOD!</div></main>
+<script>
+const $=id=>document.getElementById(id),fmt=n=>n.toLocaleString('en-KE');
+const eat=()=>new Date(Date.now()+3*3600e3);let last=-1;
+function render(s){
+  $('day').textContent=s.day+'/'+s.days;$('dl').textContent='DAY '+s.day+'/'+s.days+' • TIME LEFT TODAY';
+  $('guest').textContent=s.guest;$('g').style.display=s.guest?'':'none';
+  $('fill').style.width=Math.max(s.percent,1)+'%';
+  $('amt').textContent=fmt(s.total)+' / '+fmt(s.target);$('pct').textContent=s.percent+'%';
+  const t=eat();$('asof').textContent=String(t.getUTCHours()).padStart(2,'0')+':'+String(t.getUTCMinutes()).padStart(2,'0');
+  $('recent').innerHTML=s.recent.map(r=>`<li><span>${r.name.replace(/[<>&]/g,'')}</span><b>Ksh ${fmt(r.amount)}</b></li>`).join('');
+  if(last>=0&&s.total>last){$('amt').classList.remove('flash');void $('amt').offsetWidth;$('amt').classList.add('flash')}
+  last=s.total;
+}
+function tick(){const t=eat(),m=86400-(t.getUTCHours()*3600+t.getUTCMinutes()*60+t.getUTCSeconds());
+  $('left').textContent=`${Math.floor(m/3600)}h ${Math.floor(m%3600/60)}m ${m%60}s`;
+  $('date').textContent=t.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).toUpperCase()}
+setInterval(tick,1000);tick();
+fetch('/api/progress').then(r=>r.json()).then(render).catch(()=>{});
+const es=new EventSource('/events');es.onmessage=e=>render(JSON.parse(e.data));
+</script></body></html>
